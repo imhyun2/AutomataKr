@@ -1,12 +1,10 @@
 #include "StdAfx.h"
 #include "AutomataKR.h"
 
-const int BASE_CODE = 0xac00;		// 기초음성(가)
-const int LIMIT_MIN = 0xac00;		// 음성범위 MIN(가)
-const int LIMIT_MAX = 0xd7a3;		// 음성범위 MAX
+const UINT BASE_CODE = 0xac00;		// 기초음성(가)
 
 // 음성 테이블
-wchar_t SOUND_TABLE[68] =
+const TCHAR SOUND_TABLE[68] =
 {
 	/* 초성 19자 0 ~ 18 */
 	_T('ㄱ'), _T('ㄲ'), _T('ㄴ'), _T('ㄷ'), _T('ㄸ'),
@@ -21,128 +19,59 @@ wchar_t SOUND_TABLE[68] =
 	_T('ㅣ'),
 	/* 종성 28자 40 ~ 67 */
 	_T(' ') , _T('ㄱ'), _T('ㄲ'), _T('ㄳ'), _T('ㄴ'),
-	_T('ㄵ'), _T('ㄶ'), _T('ㄷ'), _T('ㄹ'), _T('ㄺ'), 
+	_T('ㄵ'), _T('ㄶ'), _T('ㄷ'), _T('ㄹ'), _T('ㄺ'),
 	_T('ㄻ'), _T('ㄼ'), _T('ㄽ'), _T('ㄾ'), _T('ㄿ'),
 	_T('ㅀ'), _T('ㅁ'), _T('ㅂ'), _T('ㅄ'), _T('ㅅ'),
 	_T('ㅆ'), _T('ㅇ'), _T('ㅈ'), _T('ㅊ'), _T('ㅋ'),
 	_T('ㅌ'), _T('ㅍ'), _T('ㅎ')
 };
 
-// 초성 합성 테이블
-int MIXED_CHO_CONSON[14][3] =
+const UINT FREQUENCY_TABLE[40][27] =
 {
-	{ 0, 0,15}, // ㄱ,ㄱ,ㅋ
-	{15, 0, 1}, // ㅋ,ㄱ,ㄲ
-	{ 1, 0, 0}, // ㄲ,ㄱ,ㄱ
-
-	{ 3, 3,16}, // ㄷ,ㄷ,ㅌ
-	{16, 3, 4}, // ㅌ,ㄷ,ㄸ
-	{ 4, 3, 3}, // ㄸ,ㄷ,ㄷ
-
-	{ 7, 7,17}, // ㅂ,ㅂ,ㅍ
-	{17, 7, 8}, // ㅍ,ㅂ,ㅃ
-	{ 8, 7, 7}, // ㅃ,ㅂ,ㅂ
-
-	{ 9, 9,10}, // ㅅ,ㅅ,ㅆ
-	{10, 9, 9}, // ㅆ,ㅅ,ㅅ
-
-	{12,12,14}, // ㅈ,ㅈ,ㅊ
-	{14,12,13}, // ㅊ,ㅈ,ㅉ
-	{13,12,12}  // ㅉ,ㅈ,ㅈ
-};
-
-// 초성,중성 모음 합성 테이블
-int MIXED_VOWEL[21][3] = 
-{
-	{19,19,21},	// ㅏ,ㅏ,ㅑ
-	{21,19,19},	// ㅑ,ㅏ,ㅏ
-
-	{19,39,20},	// ㅏ,ㅣ,ㅐ
-	{21,39,22},	// ㅑ,ㅣ,ㅒ
-
-	{23,23,25},	// ㅓ,ㅓ,ㅕ
-	{25,23,23},	// ㅕ,ㅓ,ㅓ
-
-	{23,39,24},	// ㅓ,ㅣ,ㅔ
-	{25,39,26},	// ㅕ,ㅣ,ㅖ
-
-	{27,27,31},	// ㅗ,ㅗ,ㅛ
-	{31,27,27},	// ㅛ,ㅗ,ㅗ
-
-	{27,19,28},	// ㅗ,ㅏ,ㅘ
-	{28,39,29},	// ㅘ,ㅣ,ㅙ
-
-	{27,39,30},	// ㅗ,ㅣ,ㅚ
-
-	{32,32,36},	// ㅜ,ㅜ,ㅠ
-	{36,32,32},	// ㅠ,ㅜ,ㅜ
-
-	{32,23,33},	// ㅜ,ㅓ,ㅝ
-	{33,39,34},	// ㅝ,ㅣ,ㅞ
-
-	{32,39,35},	// ㅜ,ㅣ,ㅟ
-
-	{39,39,37},	// ㅣ,ㅣ,ㅡ
-	{37,39,38},	// ㅡ,ㅣ,ㅢ
-	{38,39,39}	// ㅢ,ㅣ,ㅣ
-};
-
-// 종성 합성 테이블
-int MIXED_JONG_CONSON[22][3] = 
-{
-	{41,41,64}, // ㄱ,ㄱ,ㅋ
-	{64,41,42}, // ㅋ,ㄱ,ㄲ
-	{42,41,41}, // ㄲ,ㄱ,ㄱ
-
-	{41,59,43}, // ㄱ,ㅅ,ㄳ
-
-	{44,62,45}, // ㄴ,ㅈ,ㄵ
-	{44,67,46}, // ㄴ,ㅎ,ㄶ
-
-	{47,47,65}, // ㄷ,ㄷ,ㅌ
-	{65,47,47}, // ㅌ,ㄷ,ㄷ
-
-	{48,41,49}, // ㄹ,ㄱ,ㄺ
-	{48,56,50}, // ㄹ,ㅁ,ㄻ
-
-	{48,57,51}, // ㄹ,ㅂ,ㄼ
-	{51,57,54}, // ㄼ,ㅂ,ㄿ
-
-	{48,59,52}, // ㄹ,ㅅ,ㄽ
-	{48,47,53}, // ㄹ,ㄷ,ㄾ	
-	{48,67,55}, // ㄹ,ㅎ,ㅀ
-
-	{57,57,66}, // ㅂ,ㅂ,ㅍ
-	{66,57,57}, // ㅍ,ㅂ,ㅂ
-
-	{57,59,58}, // ㅂ,ㅅ,ㅄ
-
-	{59,59,60}, // ㅅ,ㅅ,ㅆ
-	{60,59,59}, // ㅆ,ㅅ,ㅅ
-
-	{62,62,63}, // ㅈ,ㅈ,ㅊ
-	{63,62,62}  // ㅊ,ㅈ,ㅈ
-};
-
-// 종성 분해 테이블
-int DIVIDE_JONG_CONSON[13][3] = 
-{
-	{41,41,42}, // ㄱ,ㄱ,ㄲ
-	{41,59,43}, // ㄱ,ㅅ,ㄳ
-	{44,62,45}, // ㄴ,ㅈ,ㄵ
-	{44,67,46}, // ㄴ,ㅎ,ㄶ
-	{48,41,49}, // ㄹ,ㄱ,ㄺ
-	{48,56,50}, // ㄹ,ㅁ,ㄻ
-	{48,57,51}, // ㄹ,ㅂ,ㄼ
-	{48,66,54}, // ㄹ,ㅍ,ㄿ
-	{48,59,52}, // ㄹ,ㅅ,ㄽ
-	{48,65,53}, // ㄹ,ㅌ,ㄾ	
-	{48,67,55}, // ㄹ,ㅎ,ㅀ
-	{57,59,58}, // ㅂ,ㅅ,ㅄ
-	{59,59,60}  // ㅅ,ㅅ,ㅆ
+	{19, 23, 27, 37, 39, 20, 24, 25, 28, 32, 26, 31, 33, 35, 36, 21, 22, 29, 30, 34, 38, 0, 0, 0, 0, 0, 0},		// ㄱ
+	{19, 27, 32, 37, 39, 20, 23, 24, 25, 35, 28, 29, 30, 33, 34, 21, 22, 26, 31, 36, 38, 0, 0, 0, 0, 0, 0},		// ㄲ
+	{19, 20, 27, 37, 39, 21, 23, 24, 25, 32, 28, 30, 31, 35, 36, 22, 26, 29, 33, 38, 34, 0, 0, 0, 0, 0, 0},		// ㄴ
+	{19, 20, 27, 30, 37, 23, 24, 32, 35, 39, 25, 29, 33, 34, 36, 21, 26, 28, 31, 38, 22, 0, 0, 0, 0, 0, 0},		// ㄷ
+	{19, 20, 23, 27, 37, 24, 32, 35, 38, 39, 22, 25, 28, 29, 30, 21, 31, 33, 34, 36, 26, 0, 0, 0, 0, 0, 0},		// ㄸ
+	{19, 23, 27, 37, 39, 20, 24, 25, 32, 36, 21, 26, 30, 31, 36, 28, 29, 34, 35, 38, 22, 0, 0, 0, 0, 0, 0},		// ㄹ
+	{19, 25, 27, 32, 39, 20, 23, 24, 33, 37, 30, 31, 35, 36, 38, 21, 26, 28, 29, 34, 22, 0, 0, 0, 0, 0, 0},		// ㅁ
+	{19, 23, 27, 32, 39, 20, 24, 25, 28, 37, 29, 30, 35, 36, 38, 21, 26, 31, 33, 34, 22, 0, 0, 0, 0, 0, 0},		// ㅂ
+	{19, 20, 23, 32, 37, 21, 25, 27, 31, 39, 24, 28, 30, 35, 36, 26, 29, 33, 34, 38, 22, 0, 0, 0, 0, 0, 0},		// ㅃ
+	{19, 23, 27, 32, 39, 20, 24, 25, 35, 37, 21, 29, 30, 31, 36, 22, 26, 28, 33, 34, 38, 0, 0, 0, 0, 0, 0},		// ㅅ
+	{19, 23, 27, 37, 39, 20, 24, 28, 32, 38, 21, 29, 30, 31, 33, 25, 26, 34, 35, 36, 22, 0, 0, 0, 0, 0, 0},		// ㅆ
+	{23, 24, 37, 38, 39, 19, 21, 25, 31, 32, 27, 28, 33, 35, 36, 20, 22, 26, 29, 30, 34, 0, 0, 0, 0, 0, 0},		// ㅇ
+	{19, 23, 27, 32, 39, 20, 24, 25, 31, 37, 21, 28, 30, 33, 35, 22, 26, 34, 36, 38, 29, 0, 0, 0, 0, 0, 0},		// ㅈ
+	{19, 20, 23, 27, 39, 25, 28, 30, 32, 37, 21, 24, 31, 33, 36, 22, 26, 29, 34, 35, 38, 0, 0, 0, 0, 0, 0},		// ㅉ
+	{19, 23, 24, 32, 39, 20, 25, 27, 30, 37, 28, 31, 33, 34, 35, 21, 22, 26, 36, 38, 29, 0, 0, 0, 0, 0, 0},		// ㅊ
+	{19, 23, 27, 37, 39, 20, 24, 25, 29, 32, 28, 31, 33, 35, 36, 21, 26, 30, 34, 38, 22, 0, 0, 0, 0, 0, 0},		// ㅋ
+	{19, 20, 23, 27, 37, 24, 30, 32, 35, 39, 25, 33, 34, 36, 38, 21, 26, 28, 29, 31, 22, 0, 0, 0, 0, 0, 0},		// ㅌ
+	{19, 25, 27, 32, 39, 20, 23, 31, 36, 37, 24, 26, 30, 35, 38, 21, 28, 29, 33, 34, 22, 0, 0, 0, 0, 0, 0},		// ㅍ
+	{19, 20, 25, 28, 30, 23, 27, 32, 37, 39, 21, 24, 26, 31, 38, 29, 33, 34, 35, 36, 22, 0, 0, 0, 0, 0, 0},		// ㅎ
+	{41, 44, 48, 56, 61, 46, 57, 60, 62, 65, 42, 47, 49, 59, 66, 45, 50, 51, 58, 67, 43, 52, 53, 54, 55, 63, 64},	// ㅏ
+	{41, 44, 56, 60, 61, 48, 57, 59, 62, 65, 42, 47, 63, 64, 66, 67, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅐ
+	{41, 44, 48, 56, 61, 46, 51, 59, 65, 67, 57, 60, 47, 62, 63, 64, 66, 42, 43, 45, 49, 50, 52, 53, 54, 55, 58},	// ㅑ
+	{44, 48, 56, 60, 61, 41, 47, 57, 59, 62, 63, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅒ
+	{41, 44, 48, 59, 61, 56, 57, 58, 60, 67, 47, 50, 51, 62, 66, 42, 45, 49, 64, 65, 43, 46, 52, 53, 54, 55, 63},	// ㅓ
+	{44, 48, 56, 59, 60, 41, 47, 57, 61, 63, 62, 66, 64, 65, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅔ
+	{41, 44, 48, 60, 61, 56, 57, 59, 63, 66, 42, 51, 58, 64, 65, 47, 50, 67, 62, 43, 45, 46, 49, 52, 53, 54, 55},	// ㅕ
+	{44, 48, 56, 59, 60, 41, 57, 61, 47, 62, 63, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅖ
+	{41, 44, 48, 59, 61, 47, 56, 57, 66, 67, 43, 50, 55, 62, 63, 42, 49, 51, 52, 65, 45, 46, 53, 54, 58, 60, 64},	// ㅗ
+	{41, 44, 48, 60, 61, 56, 57, 59, 62, 47, 63, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅘ
+	{41, 44, 59, 60, 61, 56, 47, 48, 57, 62, 63, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅙ
+	{41, 44, 48, 57, 61, 56, 59, 60, 63, 47, 62, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅚ
+	{41, 44, 57, 59, 61, 48, 56, 66, 47, 62, 63, 64, 65, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58, 60},	// ㅛ
+	{41, 44, 48, 56, 61, 47, 49, 57, 59, 65, 42, 50, 55, 62, 66, 52, 53, 58, 63, 67, 43, 45, 46, 51, 54, 60, 64},	// ㅜ
+	{44, 48, 59, 60, 61, 41, 56, 57, 64, 47, 62, 63, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅝ
+	{41, 44, 48, 57, 61, 56, 60, 47, 59, 62, 63, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅞ
+	{44, 48, 57, 59, 61, 41, 56, 60, 47, 62, 63, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅟ
+	{41, 44, 48, 56, 61, 57, 59, 63, 47, 62, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58, 60},	// ㅠ
+	{44, 48, 56, 57, 61, 41, 47, 49, 59, 65, 46, 54, 55, 62, 66, 50, 58, 63, 64, 67, 42, 43, 45, 51, 52, 63, 60},	// ㅡ
+	{44, 48, 56, 57, 61, 41, 59, 60, 47, 62, 63, 64, 65, 66, 67, 42, 43, 45, 46, 49, 50, 51, 52, 53, 54, 55, 58},	// ㅢ
+	{41, 44, 48, 56, 60, 57, 59, 61, 63, 66, 47, 49, 55, 62, 65, 50, 64, 67, 42, 43, 45, 46, 51, 52, 53, 54, 58},	// ㅣ
 };
 
 CAutomataKR::CAutomataKR(void)
+: m_strCompletedText(_T(""))
 {
 	Clear();
 }
@@ -154,463 +83,141 @@ CAutomataKR::~CAutomataKR(void)
 // 버퍼 초기화
 void CAutomataKR::Clear()
 {
-	m_nStatus		= HS_FIRST;
-	completeText	= _T("");
-	ingWord			= NULL;
-	m_completeWord	= NULL;
+	m_uPhonemes[0]		= 0;
+	m_uPhonemes[1]		= 0;
+	m_uPhonemes[2]		= 40;
+
+	m_chWord			= NULL;
+	m_strText			= _T("");
+
+	m_uStatus			= HS_NULL;
+}
+
+void CAutomataKR::Reset()
+{
+	Clear();
+
+	m_strCompletedText = _T("");
 }
 
 // 키코드 입력 및 조합 (정해진 int 코드값을 입력 받아 한글조합)
-wchar_t CAutomataKR::SetKeyCode(int nKeyCode)
+void CAutomataKR::SetKeyCode(int nKeyCode)
 {
-	m_completeWord = NULL;
-
 	// 특수키 입력
-	if(nKeyCode < 0)
+	if (nKeyCode < 0)
 	{
-		m_nStatus = HS_FIRST;
-
-		if(nKeyCode == KEY_CODE_SPACE) // 띄어쓰기
+		if (nKeyCode == KEY_CODE_SPACE)	// 완료
 		{
-			if(ingWord != NULL)
-				completeText += ingWord;
-			else
-				completeText += _T(' ');
-
-			ingWord = NULL;
-		}
-		else if(nKeyCode == KEY_CODE_ENTER) // 내려쓰기
-		{
-			if(ingWord != NULL)
-				completeText += ingWord;
-
-			completeText += _T("\r\n");
-
-			ingWord = NULL;
-		}
-		else if(nKeyCode == KEY_CODE_BACKSPACE) // 지우기
-		{
-			if(ingWord == NULL)
+			if (m_chWord != NULL)	// 무언가 입력되어 있는 상태에서 완료를 눌렀을 때
 			{
-				if(completeText.GetLength() > 0)
-				{
-					if(completeText.Right(1) == _T("\n"))
-						completeText = completeText.Left(completeText.GetLength() -2);
-					else
-						completeText = completeText.Left(completeText.GetLength() -1);
-				}
+				m_strCompletedText += m_chWord;
+
+				m_chWord	= NULL;
+				m_uStatus	= HS_NULL;
 			}
+
+			else					// 스페이바 역할
+				m_strCompletedText += _T(' ');
+
+			m_strText = m_strCompletedText;
+		}
+
+		if (nKeyCode == KEY_CODE_BACKSPACE) // 지우기
+		{
+			if (m_chWord != NULL)
+				--m_uStatus;
+
 			else
 			{
-				m_nStatus = DownGradeIngWordStatus(ingWord);
+				if (m_strCompletedText.GetLength() > 0)
+					m_strCompletedText = m_strCompletedText.Left(m_strCompletedText.GetLength() - 1);
+
+				m_uStatus = HS_NULL;
 			}
 		}
-
-		return m_completeWord;
 	}
 
-
-
-	switch(m_nStatus)
+	// 글자 키 입력
+	else
 	{
-	case HS_FIRST:
 		// 초성
-		m_nPhonemez[0]	= nKeyCode;
-		ingWord			= SOUND_TABLE[m_nPhonemez[0]];
-		m_nStatus		= nKeyCode > 18 ? HS_FIRST_C : HS_FIRST_V;
-		break;
+		if (nKeyCode <= 18)
+		{
+			m_uPhonemes[0]	= nKeyCode;
 
-	case HS_FIRST_C:
-		// 모음 + 모음
-		if(nKeyCode > 18)	// 모음
-		{
-			if(MixVowel(&m_nPhonemez[0], nKeyCode) == FALSE)
-			{
-				m_completeWord = SOUND_TABLE[m_nPhonemez[0]];
-				m_nPhonemez[0] = nKeyCode;
-			}
+			if (m_uStatus == HS_NULL)
+				m_uStatus++;
 		}
-		else				// 자음
-		{
-			m_completeWord	= SOUND_TABLE[m_nPhonemez[0]];
-			m_nPhonemez[0]	= nKeyCode;
-			m_nStatus		= HS_FIRST_V;
-		}
-		break;
 
-	case HS_FIRST_V:
-		// 자음 + 자음
-		if(nKeyCode > 18)	// 모음
+		// 중성
+		else if ((nKeyCode >= 19) && (nKeyCode <= 39))
 		{
-			m_nPhonemez[1]	= nKeyCode;
-			m_nStatus		= HS_MIDDLE_STATE;
-		}
-		else				// 자음
-		{
-			if(!MixInitial(nKeyCode))
-			{
-				m_completeWord	= SOUND_TABLE[m_nPhonemez[0]];
-				m_nPhonemez[0]	= nKeyCode;
-				m_nStatus		= HS_FIRST_V;
-			}
-		}
-		break;
+			m_uPhonemes[1]	= nKeyCode;
 
-	case HS_MIDDLE_STATE:
-		// 초성 + 모음 + 모음
-		if(nKeyCode > 18)
-		{
-			if(MixVowel(&m_nPhonemez[1], nKeyCode) == FALSE)
-			{
-				m_completeWord	= CombineHangle(1);
-				m_nPhonemez[0]	= nKeyCode;
-				m_nStatus		= HS_FIRST_C;
-			}
+			if (m_uStatus == HS_FIRST)
+				m_uStatus++;
 		}
-		else
-		{
-			int jungCode = ToFinal(nKeyCode);
 
-			if(jungCode > 0)
-			{
-				m_nPhonemez[2]	= jungCode;
-				m_nStatus		= HS_END_STATE;
-			}
-			else
-			{
-				m_completeWord	= CombineHangle(1);
-				m_nPhonemez[0]	= nKeyCode;
-				m_nStatus		= HS_FIRST;
-			}
-		}
-		break;
-
-	case HS_END:
-		// 초성 + 중성 + 종성
-		if(nKeyCode > 18)  
+		// 종성
+		else if ((nKeyCode >= 40) && (nKeyCode <= 67))
 		{
-			m_completeWord	= CombineHangle(1);
-			m_nPhonemez[0]	= nKeyCode;
-			m_nStatus		= HS_FIRST;
-		}
-		else
-		{
-			int jungCode = ToFinal(nKeyCode);
-			if(jungCode > 0)
-			{
-				m_nPhonemez[2]	= jungCode;
-				m_nStatus		= HS_END_STATE;
-			}
-			else
-			{
-				m_completeWord	= CombineHangle(1);
-				m_nPhonemez[0]	= nKeyCode;
-				m_nStatus		= HS_FIRST;
-			}  
-		}
-		break;
+			m_uPhonemes[2]	= nKeyCode;
 
-	case HS_END_STATE:
-		// 초성 + 중성 + 자음(종) + 자음(종)
-		if(nKeyCode > 18)
-		{
-			m_completeWord = CombineHangle(1);
-
-			m_nPhonemez[0]	= ToInitial(m_nPhonemez[2]);
-			m_nPhonemez[1]	= nKeyCode;
-			m_nStatus		= HS_MIDDLE_STATE;
+			if (m_uStatus == HS_MIDDLE)
+				m_uStatus++;
 		}
-		else
-		{
-			int jungCode = ToFinal(nKeyCode);
-			if(jungCode > 0)
-			{
-				m_nStatus = HS_END_EXCEPTION;
-
-				if(!MixFinal(jungCode))
-				{
-					m_completeWord	= CombineHangle(2);
-					m_nPhonemez[0]	= nKeyCode;
-					m_nStatus		= HS_FIRST_V;
-				}
-			}
-			else
-			{
-				m_completeWord	= CombineHangle(2);
-				m_nPhonemez[0]	= nKeyCode;
-				m_nStatus		= HS_FIRST_V;
-			}  
-		}
-		break;
-
-	case HS_END_EXCEPTION:
-		// 초성 + 중성 + 종성(곁자음)
-		if(nKeyCode > 18)  
-		{
-			DecomposeConsonant();
-			m_nPhonemez[1]	= nKeyCode;
-			m_nStatus		= HS_MIDDLE_STATE;
-		}
-		else
-		{
-			int jungCode = ToFinal(nKeyCode);
-			if(jungCode > 0)
-			{
-				m_nStatus = HS_END_EXCEPTION;
-
-				if(!MixFinal(jungCode))
-				{
-					m_completeWord	= CombineHangle(2);
-					m_nPhonemez[0]	= nKeyCode;
-					m_nStatus		= HS_FIRST_V;
-				}
-			}
-			else
-			{
-				m_completeWord	= CombineHangle(2);
-				m_nPhonemez[0]	= nKeyCode;
-				m_nStatus		= HS_FIRST_V; 
-			}
-		}
-		break;
 	}
 
 	// 현재 보이는 글자상태
-	CombineIngWord(m_nStatus);
+	m_chWord = CombineHangle();
 
 	// 완성 문자열 만들기
-	if(m_completeWord != NULL) 
-		completeText += TCHAR(m_completeWord);
+	if (m_chWord != NULL) 
+		m_strText = m_strCompletedText + m_chWord;
 
-	return m_completeWord;
+	else
+		m_strText = m_strCompletedText;
 }
 
-// 초성으로 변환
-int CAutomataKR::ToInitial(int nKeyCode)
-{
-	switch(nKeyCode)
-	{
-	case 41: return 0;	// ㄱ
-	case 42: return 1;	// ㄲ
-	case 44: return 2;	// ㄴ
-	case 47: return 3;	// ㄷ
-	case 48: return 5;	// ㄹ
-	case 56: return 6;	// ㅁ
-	case 57: return 7;	// ㅂ
-	case 59: return 9;	// ㅅ
-	case 60: return 10;	// ㅆ
-	case 61: return 11;	// ㅇ
-	case 62: return 12;	// ㅈ
-	case 63: return 14;	// ㅊ
-	case 64: return 15;	// ㅋ
-	case 65: return 16;	// ㅌ
-	case 66: return 17;	// ㅍ
-	case 67: return 18;	// ㅎ
-	}
-	return -1;
-}
-
-// 종성으로 변환
-int CAutomataKR::ToFinal(int nKeyCode)
-{
-	switch(nKeyCode)
-	{
-	case 0: return 41;	// ㄱ
-	case 1: return 42;	// ㄲ
-	case 2: return 44;	// ㄴ
-	case 3: return 47;	// ㄷ
-	case 5: return 48;	// ㄹ
-	case 6: return 56;	// ㅁ
-	case 7: return 57;	// ㅂ
-	case 9: return 59;	// ㅅ
-	case 10: return 60;	// ㅆ
-	case 11: return 61;	// ㅇ
-	case 12: return 62;	// ㅈ
-	case 14: return 63;	// ㅊ
-	case 15: return 64;	// ㅋ
-	case 16: return 65;	// ㅌ
-	case 17: return 66;	// ㅍ
-	case 18: return 67;	// ㅎ
-	}
-	return -1;
-}
-
-// 자음분해
-void CAutomataKR::DecomposeConsonant()
-{
-	int i = 0;
-	if(m_nPhonemez[3] > 40 || m_nPhonemez[4] > 40)
-	{
-		do
-		{
-			if(DIVIDE_JONG_CONSON[i][2] == m_nPhonemez[2])
-			{
-				m_nPhonemez[3] = DIVIDE_JONG_CONSON[i][0];
-				m_nPhonemez[4] = DIVIDE_JONG_CONSON[i][1];
-
-				m_completeWord = CombineHangle(3);
-				m_nPhonemez[0]	 = ToInitial(m_nPhonemez[4]);
-				return;
-			}
-		}
-		while(++i< 13);
-	}
-
-	m_completeWord = CombineHangle(1);
-	m_nPhonemez[0]	 = ToInitial(m_nPhonemez[2]);
-}
-
-// 초성합성
-BOOL CAutomataKR::MixInitial(int nKeyCode)
-{
-	if(nKeyCode >= 19)
-		return FALSE;
-
-	int i = 0;
-	do
-	{
-		if(MIXED_CHO_CONSON[i][0] == m_nPhonemez[0] && MIXED_CHO_CONSON[i][1] == nKeyCode)
-		{
-			m_nPhonemez[0] = MIXED_CHO_CONSON[i][2];
-			return TRUE;
-		}
-	}
-	while(++i < 14);
-
-	return FALSE;
-}
-
-// 종성합성
-BOOL CAutomataKR::MixFinal(int nKeyCode)
-{
-	if(nKeyCode <= 40) return FALSE;
-
-	int i = 0;
-	do
-	{
-		if(MIXED_JONG_CONSON[i][0] == m_nPhonemez[2] && MIXED_JONG_CONSON[i][1] == nKeyCode)
-		{
-			m_nPhonemez[3] = m_nPhonemez[2];
-			m_nPhonemez[4] = nKeyCode;
-			m_nPhonemez[2] = MIXED_JONG_CONSON[i][2];
-
-			return TRUE;
-		}
-	}
-	while(++i < 22);
-
-	return FALSE;
-}
-
-// 모음합성
-BOOL CAutomataKR::MixVowel(int * currentCode, int inputCode)
-{
-	int i = 0;
-	do
-	{
-		if(MIXED_VOWEL[i][0] == * currentCode && MIXED_VOWEL[i][1] == inputCode)
-		{
-			* currentCode = MIXED_VOWEL[i][2];
-			return TRUE;
-		}
-	}
-	while(++i< 21);
-
-	return FALSE;
-}
-
-// 한글조합
-wchar_t CAutomataKR::CombineHangle(int cho, int jung, int jong)
+// 한글 조합
+TCHAR CAutomataKR::CombineHangle(UINT cho, UINT jung, UINT jong)
 {
 	// 초성 * 21 * 28 + (중성 - 19) * 28 + (종성 - 40) + BASE_CODE;
-	return BASE_CODE - 572 + jong + cho * 588 + jung * 28;
+	return static_cast<TCHAR>(BASE_CODE - 572 + jong + cho * 588 + jung * 28);
 }
 
-wchar_t CAutomataKR::CombineHangle(int status)
+TCHAR CAutomataKR::CombineHangle()
 {
-	switch(status)
+	switch(m_uStatus)
 	{
-	//초성 + 중성
-	case 1: return CombineHangle(m_nPhonemez[0], m_nPhonemez[1], 40);
+	// 초성 
+	case HS_FIRST:	return SOUND_TABLE[m_uPhonemes[0]];
+
+	//초성 + 중성 + 종성 없음
+	case HS_MIDDLE:	return CombineHangle(m_uPhonemes[0], m_uPhonemes[1], 40);
 
 	//초성 + 중성 + 종성
-	case 2: return CombineHangle(m_nPhonemez[0], m_nPhonemez[1], m_nPhonemez[2]);
+	case HS_END:	return CombineHangle(m_uPhonemes[0], m_uPhonemes[1], m_uPhonemes[2]);
+
+	default:		return NULL;
+	}
+}
+
+UINT GetCodeOrder(UINT uRow, UINT uCol)
+{
+	if ((uRow > 40) || (uCol > 27))
+		return 0;
+
+	else
+		return FREQUENCY_TABLE[uRow][uCol];
+}
+
+// 숫자 코드를 문자로 변환
+TCHAR ConvertCode2Key(UINT uKeyCode)
+{
+	if (uKeyCode > 68)
+		return NULL;
 	
-	//초성 + 중성 + 곁자음01
-	case 3: return CombineHangle(m_nPhonemez[0], m_nPhonemez[1], m_nPhonemez[3]);
-	}
-	return ' ';
-}
-
-void CAutomataKR::CombineIngWord(int status)
-{
-	switch(m_nStatus)
-	{
-	case HS_FIRST:
-	case HS_FIRST_V:
-	case HS_FIRST_C:
-		ingWord = SOUND_TABLE[m_nPhonemez[0]];
-		break;
-
-	case HS_MIDDLE_STATE:
-	case HS_END:
-		ingWord = CombineHangle(1);
-		break;
-
-	case HS_END_STATE:
-	case HS_END_EXCEPTION:
-		ingWord = CombineHangle(2);
-		break;
-	}
-}
-
-int CAutomataKR::DownGradeIngWordStatus(wchar_t word)
-{
-	int iWord = word;
-
-	//초성만 있는 경우
-	if(iWord < LIMIT_MIN || iWord > LIMIT_MAX)
-	{
-		ingWord = NULL;
-
-		return HS_FIRST;
-	}
-
-	//문자코드 체계
-	//iWord = firstWord * (21*28)
-	//		+ middleWord * 28
-	//		+ lastWord * 27
-	//		+ BASE_CODE;
-	//
-	int totalWord	= iWord - BASE_CODE;
-	int iFirstWord	= totalWord / 28 / 21;	//초성
-	int iMiddleWord = totalWord / 28 % 21;	//중성
-	int iLastWord	= totalWord % 28;		//종성
-
-	m_nPhonemez[0] = iFirstWord; //초성저장
-
-	if(iLastWord == 0)	//종성이 없는 경우
-	{
-		ingWord = SOUND_TABLE[m_nPhonemez[0]];
-
-		return HS_FIRST_V;
-	}
-
-	m_nPhonemez[1] = iMiddleWord + 19; //중성저장
-
-	iLastWord += 40;
-
-	for(int i = 0; i < 13; i++)
-	{
-		if(iLastWord == DIVIDE_JONG_CONSON[i][2])
-		{
-			ingWord = CombineHangle(3);
-			m_nPhonemez[2] = DIVIDE_JONG_CONSON[i][0]; // 종성저장
-			return HS_END_EXCEPTION;
-		}
-	}
-
-	ingWord = CombineHangle(1);
-
-	return HS_MIDDLE_STATE;
+	else
+		return SOUND_TABLE[uKeyCode];
 }

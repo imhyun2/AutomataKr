@@ -1,4 +1,4 @@
-// automataKr.h : PROJECT_NAME 응용 프로그램에 대한 주 헤더 파일입니다.
+// AutomataKr.h : PROJECT_NAME 응용 프로그램에 대한 주 헤더 파일입니다.
 //
 
 #pragma once
@@ -10,14 +10,14 @@
 #include "resource.h"		// 주 기호입니다.
 
 
-// CautomataKrApp:
-// 이 클래스의 구현에 대해서는 automataKr.cpp을 참조하십시오.
+// CAutomataKrApp:
+// 이 클래스의 구현에 대해서는 AutomataKr.cpp을 참조하십시오.
 //
 
-class CautomataKrApp : public CWinApp
+class CAutomataKrApp : public CWinApp
 {
 public:
-	CautomataKrApp();
+	CAutomataKrApp();
 
 // 재정의입니다.
 	public:
@@ -28,4 +28,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-extern CautomataKrApp theApp;
+extern CAutomataKrApp theApp;

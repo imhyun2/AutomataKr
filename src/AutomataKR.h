@@ -1,8 +1,7 @@
 #pragma once
 
 #define		KEY_CODE_SPACE			-1		// 띄어쓰기
-#define		KEY_CODE_ENTER			-2		// 내려쓰기
-#define		KEY_CODE_BACKSPACE		-3		// 지우기
+#define		KEY_CODE_BACKSPACE		-2		// 지우기
 
 class CAutomataKR
 {
@@ -11,50 +10,35 @@ public:
 	~CAutomataKR(void);
 
 public:
-	void		Clear();					// 버퍼초기화
-	wchar_t		SetKeyCode(int	nKeyCode);	// 키코드 받기 (정해진 int 코드값을 입력 받아 한글조합)
+	void	Clear();					// 버퍼 초기화
+	void	Reset();					// 모두 초기화
+	void	SetKeyCode(int nKeyCode);	// 키코드 받기 (정해진 int 코드값을 입력 받아 한글 조합)
 
-	wchar_t		ingWord;		// 작성중 글자
-	CString		completeText;	// 완성 문자열
+	// 작성 중 텍스트 받기
+	CString	GetText()	{return m_strText;}
 
 private:
-	enum	HAN_STATUS		// 단어조합상태
+	enum	HAN_STATUS	// 단어 조합 상태
 	{
-		HS_FIRST = 0,		// 초성
-		HS_FIRST_V,			// 자음 + 자음 
-		HS_FIRST_C,			// 모음 + 모음
-		HS_MIDDLE_STATE,	// 초성 + 모음 + 모음
-		HS_END,				// 초성 + 중성 + 종성
-		HS_END_STATE,		// 초성 + 중성 + 자음 + 자음
-		HS_END_EXCEPTION	// 초성 + 중성 + 종성(곁자음)
+		HS_NULL = 0,	// 아무것도 없는 상태
+		HS_FIRST,		// 초성
+		HS_MIDDLE,		// 초성 + 중성
+		HS_END,			// 초성 + 중성 + 종성
 	};
 
-	int			m_nStatus;		// 단어조합상태
-	int			m_nPhonemez[5]; // 음소[초,중,종,곁자음1,곁자음2]
+	UINT	m_uPhonemes[3];		// 음소[초,중,종]
 
-	wchar_t		m_completeWord;	// 완성글자
+	TCHAR	m_chWord;			// 작성 중 글자
+	CString	m_strText;			// 작성 중 단어
 
+	UINT	m_uStatus;			// 단어 조합 상태
 
-	// 변환 
-	int			ToInitial(int nKeyCode);	// 초성으로
-	int			ToFinal(int nKeyCode);		// 종성으로
-
-
-	// 분해 
-	void		DecomposeConsonant();		// 자음분해
-
-
-	// 합성 
-	BOOL		MixInitial(int nKeyCode);	// 초성합성
-	BOOL		MixFinal(int nKeyCode);		// 종성합성
-
-	BOOL		MixVowel(int * nCurCode, int nInCode);	// 모음합성
-
+	CString	m_strCompletedText;	// 완성된 문자열
 
 	// 조합(한글완성) 
-	wchar_t		CombineHangle(int cho, int jung, int jong);
-	wchar_t		CombineHangle(int status);
-	void		CombineIngWord(int status);
-
-	int			DownGradeIngWordStatus(wchar_t word);	//조합 문자 상태 낮추기
+	TCHAR	CombineHangle(UINT cho, UINT jung, UINT jong);
+	TCHAR	CombineHangle();
 };
+
+UINT GetCodeOrder(UINT uRow, UINT uCol);
+TCHAR ConvertCode2Key(UINT uKeyCode);

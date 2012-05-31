@@ -48,7 +48,7 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
     "LANGUAGE 18, 1\r\n"
     "#pragma code_page(949)\r\n"
-    "#include ""res\\automataKr.rc2""  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.\r\n"
+    "#include ""res\\AutomataKr.rc2""  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.\r\n"
     "#include ""afxres.rc""     // 표준 구성 요소입니다.\r\n"
     "#endif\r\n"
     "\0"
@@ -64,7 +64,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\automataKr.ico"
+IDR_MAINFRAME           ICON                    "res\\AutomataKr.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -73,40 +73,86 @@ IDR_MAINFRAME           ICON                    "res\\automataKr.ico"
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "automataKr 정보"
+CAPTION "AutomataKr 정보"
 FONT 9, "MS 셸 대화 상자", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "automataKr 버전 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "AutomataKr 버전 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2010",IDC_STATIC,40,25,119,8
     DEFPUSHBUTTON   "확인",IDOK,178,7,50,16,WS_GROUP
 END
 
-IDD_AUTOMATAKR_DIALOG DIALOGEX 0, 0, 285, 164
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+IDD_AUTOMATAKR_DIALOG DIALOGEX 0, 0, 476, 130
+STYLE DS_SETFONT | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "automataKr"
-FONT 9, "MS 셸 대화 상자", 0, 0, 0x1
+CAPTION "AutomataKR"
+FONT 20, "나눔고딕", 400, 0, 0x81
 BEGIN
-    EDITTEXT        IDC_EDIT1,7,7,271,35,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY
-    PUSHBUTTON      "ㄱㅋ",IDC_BTN01,7,46,42,33
-    PUSHBUTTON      "ㄴ",IDC_BTN02,53,46,42,33
-    PUSHBUTTON      "ㄷㅌ",IDC_BTN03,99,46,42,33
-    PUSHBUTTON      "ㄹ",IDC_BTN04,145,46,42,33
-    PUSHBUTTON      "ㅁ",IDC_BTN05,192,46,42,33
-    PUSHBUTTON      "ㅂㅍ",IDC_BTN06,7,87,42,33
-    PUSHBUTTON      "ㅅ",IDC_BTN07,53,87,42,33
-    PUSHBUTTON      "ㅇ",IDC_BTN08,99,87,42,33
-    PUSHBUTTON      "ㅈㅊ",IDC_BTN09,145,87,42,33
-    PUSHBUTTON      "ㅎ",IDC_BTN10,192,87,42,33
-    PUSHBUTTON      "ㅏㅑ",IDC_BTN11,7,124,42,33
-    PUSHBUTTON      "ㅓㅕ",IDC_BTN12,53,124,42,33
-    PUSHBUTTON      "ㅗㅛ",IDC_BTN13,99,124,42,33
-    PUSHBUTTON      "ㅜㅠ",IDC_BTN14,145,124,42,33
-    PUSHBUTTON      "ㅣㅡ",IDC_BTN15,192,124,42,33
-    PUSHBUTTON      "띄어쓰기",IDC_BUTTON1,237,46,42,33
-    PUSHBUTTON      "지우기",IDC_BUTTON2,237,87,42,33
-    PUSHBUTTON      "초기화",IDC_BUTTON3,237,124,42,33
+    EDITTEXT        IDC_EDIT1,2,2,468,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "ㄱ",IDC_BTN01,2,30,38,12
+    PUSHBUTTON      "ㄷ",IDC_BTN02,45,30,38,12
+    PUSHBUTTON      "ㅅ",IDC_BTN03,88,30,38,12
+    PUSHBUTTON      "ㅇ",IDC_BTN04,131,30,38,12
+    PUSHBUTTON      "ㅈ",IDC_BTN05,174,30,38,12
+    PUSHBUTTON      "ㄴ",IDC_BTN06,2,44,38,12
+    PUSHBUTTON      "ㄹ",IDC_BTN07,45,44,38,12
+    PUSHBUTTON      "ㅁ",IDC_BTN08,88,44,38,12
+    PUSHBUTTON      "ㅂ",IDC_BTN09,131,44,38,12
+    PUSHBUTTON      "ㅎ",IDC_BTN10,174,44,38,12
+    PUSHBUTTON      "ㄲ",IDC_BTN11,217,30,38,12
+    PUSHBUTTON      "ㄸ",IDC_BTN12,260,30,38,12
+    PUSHBUTTON      "ㅊ",IDC_BTN13,303,30,38,12
+    PUSHBUTTON      "ㅌ",IDC_BTN14,346,30,38,12
+    PUSHBUTTON      "ㅍ",IDC_BTN15,389,30,38,12
+    PUSHBUTTON      "ㅃ",IDC_BTN16,217,44,38,12
+    PUSHBUTTON      "ㅆ",IDC_BTN17,260,44,38,12
+    PUSHBUTTON      "ㅉ",IDC_BTN18,303,44,38,12
+    PUSHBUTTON      "ㅋ",IDC_BTN19,346,44,38,12
+    PUSHBUTTON      "ㅏ",IDC_BTN21,2,59,38,12
+    PUSHBUTTON      "ㅐ",IDC_BTN22,45,59,38,12
+    PUSHBUTTON      "ㅑ",IDC_BTN23,88,59,38,12
+    PUSHBUTTON      "ㅓ",IDC_BTN24,131,59,38,12
+    PUSHBUTTON      "ㅔ",IDC_BTN25,174,59,38,12
+    PUSHBUTTON      "ㅚ",IDC_BTN26,2,73,38,12
+    PUSHBUTTON      "ㅛ",IDC_BTN27,45,73,38,12
+    PUSHBUTTON      "ㅜ",IDC_BTN28,88,73,38,12
+    PUSHBUTTON      "ㅝ",IDC_BTN29,131,73,38,12
+    PUSHBUTTON      "ㅞ",IDC_BTN30,174,73,38,12
+    PUSHBUTTON      "ㅕ",IDC_BTN31,217,59,38,12
+    PUSHBUTTON      "ㅖ",IDC_BTN32,260,59,38,12
+    PUSHBUTTON      "ㅗ",IDC_BTN33,303,59,38,12
+    PUSHBUTTON      "ㅘ",IDC_BTN34,346,59,38,12
+    PUSHBUTTON      "ㅙ",IDC_BTN35,389,59,38,12
+    PUSHBUTTON      "ㅟ",IDC_BTN36,217,73,38,12
+    PUSHBUTTON      "ㅠ",IDC_BTN37,260,73,38,12
+    PUSHBUTTON      "ㅡ",IDC_BTN38,303,73,38,12
+    PUSHBUTTON      "ㅢ",IDC_BTN39,346,73,38,12
+    PUSHBUTTON      "ㅣ",IDC_BTN40,389,73,38,12
+    PUSHBUTTON      "ㄱ",IDC_BTN41,2,88,38,12
+    PUSHBUTTON      "ㄲ",IDC_BTN42,45,88,38,12
+    PUSHBUTTON      "ㄴ",IDC_BTN43,88,88,38,12
+    PUSHBUTTON      "ㄶ",IDC_BTN44,131,88,38,12
+    PUSHBUTTON      "ㄷ",IDC_BTN45,174,88,38,12
+    PUSHBUTTON      "ㅁ",IDC_BTN46,389,88,38,12
+    PUSHBUTTON      "ㅂ",IDC_BTN47,2,102,38,12
+    PUSHBUTTON      "ㅄ",IDC_BTN48,45,102,38,12
+    PUSHBUTTON      "ㅅ",IDC_BTN49,88,102,38,12
+    PUSHBUTTON      "ㅆ",IDC_BTN50,131,102,38,12
+    PUSHBUTTON      "ㄹ",IDC_BTN51,217,88,38,12
+    PUSHBUTTON      "ㄺ",IDC_BTN52,260,88,38,12
+    PUSHBUTTON      "ㄻ",IDC_BTN53,303,88,38,12
+    PUSHBUTTON      "ㅀ",IDC_BTN54,346,88,38,12
+    PUSHBUTTON      "ㅇ",IDC_BTN55,174,102,38,12
+    PUSHBUTTON      "ㅈ",IDC_BTN56,217,102,38,12
+    PUSHBUTTON      "ㅊ",IDC_BTN57,260,102,38,12
+    PUSHBUTTON      "ㅌ",IDC_BTN58,303,102,38,12
+    PUSHBUTTON      "ㅍ",IDC_BTN59,346,102,38,12
+    PUSHBUTTON      "ㅎ",IDC_BTN60,389,102,38,12
+    PUSHBUTTON      "완료",IDC_BUTTON1,2,16,468,12
+    PUSHBUTTON      "완료",IDC_BUTTON2,2,116,468,12
+    PUSHBUTTON      "지우기",IDC_BUTTON3,432,30,38,12
+    PUSHBUTTON      "초기화",IDC_BUTTON4,432,88,38,12
+    EDITTEXT        IDC_EDIT2,2,2,20,20,ES_AUTOHSCROLL | ES_READONLY | NOT WS_VISIBLE
 END
 
 
@@ -135,9 +181,9 @@ BEGIN
             VALUE "CompanyName", "TODO: <회사 이름>"
             VALUE "FileDescription", "TODO: <파일 설명>"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "automataKr.exe"
+            VALUE "InternalName", "AutomataKr.exe"
             VALUE "LegalCopyright", "TODO: (c) <회사 이름>.  All rights reserved."
-            VALUE "OriginalFilename", "automataKr.exe"
+            VALUE "OriginalFilename", "AutomataKr.exe"
             VALUE "ProductName", "TODO: <제품 이름>"
             VALUE "ProductVersion", "1.0.0.1"
         END
@@ -167,10 +213,10 @@ BEGIN
 
     IDD_AUTOMATAKR_DIALOG, DIALOG
     BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 278
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 157
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 470
+        TOPMARGIN, 2
+        BOTTOMMARGIN, 123
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -183,7 +229,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_ABOUTBOX            "automataKr 정보(&A)..."
+    IDS_ABOUTBOX            "AutomataKr 정보(&A)..."
 END
 
 #endif    // 한국어 resources
@@ -204,7 +250,7 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
 LANGUAGE 18, 1
 #pragma code_page(949)
-#include "res\automataKr.rc2"  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.
+#include "res\AutomataKr.rc2"  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.
 #include "afxres.rc"     // 표준 구성 요소입니다.
 #endif
 

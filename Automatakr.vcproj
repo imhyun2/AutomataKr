@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="automataKr"
+	Name="AutomataKr"
 	ProjectGUID="{F585E6CA-F224-428A-A60B-3A0BD55BE2D0}"
-	RootNamespace="automataKr"
+	RootNamespace="AutomataKr"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -51,8 +51,8 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				WarningLevel="4"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -131,7 +131,7 @@
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
-				WarningLevel="3"
+				WarningLevel="4"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -190,11 +190,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\automataKr.cpp"
+				RelativePath=".\AutomataKr.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\automataKrDlg.cpp"
+				RelativePath=".\AutomataKrDlg.cpp"
 				>
 			</File>
 			<File
@@ -224,11 +224,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\automataKr.h"
+				RelativePath=".\AutomataKr.h"
 				>
 			</File>
 			<File
-				RelativePath=".\automataKrDlg.h"
+				RelativePath=".\AutomataKrDlg.h"
 				>
 			</File>
 			<File
@@ -246,15 +246,15 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\res\automataKr.ico"
+				RelativePath=".\res\AutomataKr.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\automataKr.rc"
+				RelativePath=".\AutomataKr.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\res\automataKr.rc2"
+				RelativePath=".\res\AutomataKr.rc2"
 				>
 			</File>
 		</Filter>
@@ -262,7 +262,7 @@
 			Name="src"
 			>
 			<File
-				RelativePath=".\src\AutomataKR.cpp"
+				RelativePath=".\src\AutomataKr.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -284,7 +284,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\AutomataKR.h"
+				RelativePath=".\src\AutomataKr.h"
 				>
 			</File>
 		</Filter>
@@ -296,7 +296,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="automataKr.rc"
+			Value="AutomataKr.rc"
 		/>
 	</Globals>
 </VisualStudioProject>
